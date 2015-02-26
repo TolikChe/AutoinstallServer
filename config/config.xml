@@ -7,7 +7,8 @@
 			<tag/>
 			<git_url>ssh://srv-git/Repositories/peterservice/SCR_CMS.git</git_url>			
 			<setup_mode>install</setup_mode>
-			<install_values_file>Config/SCR_CMS/cms_install_values.sql</install_values_file>
+			<install_values_file>cms_install_values.sql</install_values_file>
+			<install_values_directory>Config/SCR_CMS</install_values_directory>
 			<distrib_file>distrib10.bat</distrib_file>
 			<distrib_directory>Distrib10</distrib_directory>
 		</subsystem>

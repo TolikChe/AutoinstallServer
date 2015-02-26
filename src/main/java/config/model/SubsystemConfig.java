@@ -34,6 +34,10 @@ public class SubsystemConfig {
      */
     private String installValuesFileName;
     /**
+     * Директория где лежит файла с параметрами
+     */
+    private String installValuesDirectory;
+    /**
      * Имя файла, который делает дистрибутив (обычно это distrib10.bat или distrib.bat)
      */
     private String distribFileName;
@@ -115,5 +119,13 @@ public class SubsystemConfig {
 
     public void setDistribDirectory(String distribDirectory) {
         this.distribDirectory = distribDirectory;
+    }
+
+    public String getInstallValuesDirectory() {
+        return installValuesDirectory;
+    }
+
+    public void setInstallValuesDirectory(String installValuesDirectory) {
+        this.installValuesDirectory = installValuesDirectory;
     }
 }

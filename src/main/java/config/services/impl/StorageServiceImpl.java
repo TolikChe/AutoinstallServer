@@ -94,6 +94,7 @@ public class StorageServiceImpl implements StorageService{
                 subsCfg.setGitUrl(eElement.getElementsByTagName("git_url").item(0).getTextContent());
                 subsCfg.setSetupMode(eElement.getElementsByTagName("setup_mode").item(0).getTextContent());
                 subsCfg.setInstallValuesFileName(eElement.getElementsByTagName("install_values_file").item(0).getTextContent());
+                subsCfg.setInstallValuesDirectory(eElement.getElementsByTagName("install_values_directory").item(0).getTextContent());
                 subsCfg.setDistribFileName(eElement.getElementsByTagName("distrib_file").item(0).getTextContent());
                 subsCfg.setDistribDirectory(eElement.getElementsByTagName("distrib_directory").item(0).getTextContent());
                 // Добавить подсистему в список подсистем

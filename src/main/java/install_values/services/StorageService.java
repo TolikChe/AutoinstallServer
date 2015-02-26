@@ -14,13 +14,13 @@ public interface StorageService {
      * @param filename Имя файла из которого надо прочитать объект
      * @return Объект описывающий cms_install_values
      */
-    public InstallValues readFromFile(String filename) throws RuntimeException;
+    public InstallValues readFromFile(String filename) throws Exception;
     /**
      * Запишем из объекта cms_install_values значения в файл
      * @param installValues Объект который необходимо записать в файл
      * @param filename Имя файла в который мы запишем значение объекта
      */
-    public void writeToFile(InstallValues installValues, String filename) throws RuntimeException;
+    public void writeToFile(InstallValues installValues, String filename) throws Exception;
     /**
      * Проверяем что бы все обязательные поля в объекте cms_install_values были заполнены
      * @param installValues Объект который необходимо записать в файл

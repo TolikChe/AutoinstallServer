@@ -20,7 +20,7 @@ public class StorageServiceImpl implements StorageService {
      * Прочитаем конфиг из файла в объект
      */
     @Override
-    public InstallValues readFromFile(String filename) throws RuntimeException{
+    public InstallValues readFromFile(String filename) throws Exception{
 
         // Надо разобрать путь к файлу cms_install_values
         // В пути будет имя папки совпадающее с именем подсистемы.
@@ -36,7 +36,7 @@ public class StorageServiceImpl implements StorageService {
                 // Вернем наполненный объект
                 return installValuesScrCms;
             } catch (Exception e) {
-                throw new RuntimeException("Ошибка при чтении файла cms_install_values для подсистемы SCR_CMS \n" + e.getMessage());
+                throw new Exception("Ошибка при чтении файла cms_install_values для подсистемы SCR_CMS \n" + e.getMessage());
             }
         }
 
@@ -56,7 +56,7 @@ public class StorageServiceImpl implements StorageService {
                 // Вернем наполненный объект
                 return installValuesAdapter2Bis;
             } catch (Exception e) {
-                throw new RuntimeException("Ошибка при чтении файла cms_install_values для подсистемы CMS_SRV_DB");
+                throw new Exception("Ошибка при чтении файла cms_install_values для подсистемы CMS_SRV_DB");
             }
         }
 
@@ -76,18 +76,18 @@ public class StorageServiceImpl implements StorageService {
                 // Вернем наполненный объект
                 return installValuesCmsSrvDb;
             } catch (Exception e) {
-                throw new RuntimeException("Ошибка при чтении файла cms_install_values для подсистемы CMS_DS_ADAPTER");
+                throw new Exception("Ошибка при чтении файла cms_install_values для подсистемы CMS_DS_ADAPTER");
             }
         }
 
-        throw new RuntimeException("Ошибка при раcпозновании типа подсистемы");
+        throw new Exception("Ошибка при раcпозновании типа подсистемы");
     }
 
     /**
      * Сохраним объект описывающий cms_install_values в файл
      */
     @Override
-    public void writeToFile(InstallValues installValues, String filename) throws RuntimeException{
+    public void writeToFile(InstallValues installValues, String filename) throws Exception{
 
         try {
             FileWriter fileInstallValues = new FileWriter (new File(filename));
@@ -95,7 +95,7 @@ public class StorageServiceImpl implements StorageService {
             fileInstallValues.write(installValues.toString());
             fileInstallValues.close();
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка при сохранении файла cms_install_values.\nИмя файла: " + filename);
+            throw new Exception("Ошибка при сохранении файла cms_install_values.\nИмя файла: " + filename);
         }
     }
 
