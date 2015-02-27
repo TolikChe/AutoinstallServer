@@ -5,12 +5,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.*;
 
 public class SetupServiceScrCmsTest {
 
     SetupServiceScrCms setupServiceScrCms;
     SubsystemConfig subsystemConfig;
+    String paramDestination = "";
 
     @Before
     public void setUp() throws Exception {
@@ -29,6 +32,8 @@ public class SetupServiceScrCmsTest {
         subsystemConfig.setDistribFileName("distrib10.bat");
         subsystemConfig.setDistribDirectory("Distrib10");
 
+        // Выберем мето назначение, куда будем клонировать подсистему
+        paramDestination = "D:/TEMP/ZZZ";
     }
 
     /**
@@ -36,16 +41,39 @@ public class SetupServiceScrCmsTest {
      */
     @Test
     public void testCloneSubsystem() throws Exception {
-        setupServiceScrCms.cloneSubsystem( subsystemConfig, "D:/TEMP/ZZZ", true);
+        // Сначала склонируем подсистему
+        setupServiceScrCms.cloneSubsystem( subsystemConfig, paramDestination, true);
+
+        // Проверка того что подсистема склонировалась верно - наличие новой папкис заданным именем и наличие в ней файлов.
+        File res = new File(paramDestination);
+        assertNotEquals("Проверим что клонирвоание успешно", 0, res.listFiles().length );
     }
 
     /**
      * Проверим как работает подготовка исходников подсистемы
      */
-    @Ignore
     @Test
     public void testPrepareSources() throws Exception {
-        String destination = setupServiceScrCms.cloneSubsystem( subsystemConfig, "D:/TEMP/ZZZ", true);
+        String destination = setupServiceScrCms.cloneSubsystem( subsystemConfig, paramDestination, true);
         setupServiceScrCms.prepareSources(subsystemConfig, destination );
+
+        // Проверим что клонирвоание успешно
+        File res = new File(paramDestination);
+        assertNotEquals("Проверим что клонирвоание успешно", 0, res.listFiles().length );
+
+        // Проверим что появлиась папка Distrib
+        File dstr = new File (destination + "/Srv_Part/" + subsystemConfig.getDistribDirectory());
+        assertTrue("Проверим что появлиась папка Distrib", dstr.exists() && dstr.isDirectory());
+
+    }
+
+    /**
+     * Проверим что установка выполняется верно.
+     */
+    @Test
+    public void testSetupSubsystem() throws Exception {
+        String destination = setupServiceScrCms.cloneSubsystem( subsystemConfig, paramDestination, true);
+        setupServiceScrCms.prepareSources(subsystemConfig, destination );
+        setupServiceScrCms.setupSubsystem(subsystemConfig, destination );
     }
 }
