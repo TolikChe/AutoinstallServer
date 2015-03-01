@@ -26,14 +26,6 @@ public interface SetupService {
      */
     public boolean prepareSources (SubsystemConfig subsystem, String destination) throws Exception;
 
-    /**
-     * Подготавливаем текст подсистемы. Деалем из Source Distrib.
-     * Переносим в в папку подсистемы файл cms_install_values и вызываем distib10.bat что бы исходники превратились в готовые файлы
-     * @param subsystem Подсистема, чьи исходники надо подготовить. Её исходники должны быть предваритально склонированы
-     * @return TRUE - если все успешно
-     */
-    public boolean prepareSchema (SubsystemConfig subsystem) throws Exception;
-
 
     /**
      * Устанавливаем подсистему.

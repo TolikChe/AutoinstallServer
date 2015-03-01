@@ -1,5 +1,7 @@
 config\model\SubsystemConfig.class
 config\model\CommonConfig.class
 config\services\impl\StorageServiceImpl.class
+subsystems\services\SetupService.class
+prepare\controller\SetupController.class
 config\services\StorageService.class
 config\services\SetupService.class
