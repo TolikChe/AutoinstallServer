@@ -18,7 +18,8 @@
 			<tag>028.00</tag>
 			<git_url>ssh://srv-git/Repositories/peterservice/CMS_SRV_DB.git</git_url>
 			<setup_mode>install</setup_mode>
-			<install_values_file>Config/CMS_SRV_DB/cms_install_values.sql</install_values_file>
+			<install_values_file>cms_install_values.sql</install_values_file>
+			<install_values_directory>Config/CMS_SRV_DB</install_values_directory>
 			<distrib_file>distrib10.bat</distrib_file>
 			<distrib_directory>Distrib</distrib_directory>
 		</subsystem>
@@ -28,7 +29,8 @@
 			<tag/>
 			<git_url>ssh://srv-git/Repositories/peterservice/CMS_DS_ADAPTER2BIS.git</git_url>
 			<setup_mode>install</setup_mode>
-			<install_values_file>Config/CMS_DS_ADAPTER/cms_install_values.sql</install_values_file>
+			<install_values_file>cms_install_values.sql</install_values_file>
+			<install_values_directory>Config/CMS_DS_ADAPTER</install_values_directory>
 			<distrib_file>distrib10.bat</distrib_file>
 			<prepare_file>distrib10.bat</prepare_file>
 			<distrib_directory>Distrib10</distrib_directory>

@@ -4,6 +4,7 @@ import config.model.CommonConfig;
 import config.model.SubsystemConfig;
 import install_values.model.impl.InstallValuesScrCms;
 
+import java.io.File;
 import java.sql.*;
 import java.util.Properties;
 
@@ -57,12 +58,45 @@ public class PrepareService {
          * Удаляем заданные роли
          */
 
-        return false;
+        return true;
     }
 
+    /**
+     * Используется при вызове prepareFileSystem
+     */
+    private void removeDirectory(File dir) {
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null && files.length > 0) {
+                for (File aFile : files) {
+                    removeDirectory(aFile);
+                }
+            }
+            dir.delete();
+        } else {
+            dir.delete();
+        }
+    }
 
-    public boolean prepareFileSystem (CommonConfig config) throws Exception {
-        return false;
+    /**
+     * Подготовка файловой системы к клонированию новых дистрибутивов
+     * Использует рекурсивный возов removeDirectory
+     * @param config Объект с полной конфигурацией
+     * @return TRUE если все успешно
+     */
+    public boolean prepareFileSystem (CommonConfig config) {
+
+        // Используется для подготовки перед клонированием
+        try {
+            removeDirectory(new File(config.getDestinationDirectory()));
+        } catch (Exception ex) {
+            System.out.println("Ошибка при подготовке файловой системы");
+            System.out.println("попытка удалить папку " + config.getDestinationDirectory() );
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }

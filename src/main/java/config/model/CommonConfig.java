@@ -30,7 +30,7 @@ public class CommonConfig {
     /**
      * Список подсистем, описанных в конфигурации
      */
-    private List<SubsystemConfig> subsystemList = new ArrayList<SubsystemConfig>(10);
+    private List<SubsystemConfig> subsystemConfigList = new ArrayList<SubsystemConfig>(10);
 
     /******************************Геттеры и сеттеры*************************************/
 
@@ -42,8 +42,8 @@ public class CommonConfig {
         return prepareDirectory;
     }
 
-    public List<SubsystemConfig> getSubsystemList() {
-        return subsystemList;
+    public List<SubsystemConfig> getSubsystemConfigList() {
+        return subsystemConfigList;
     }
 
     public String getConfigFilename() {
@@ -70,12 +70,12 @@ public class CommonConfig {
         this.prepareDirectory = prepareDirectory;
     }
 
-    public void setSubsystemList(List<SubsystemConfig> subsystemList) {
-        this.subsystemList = subsystemList;
+    public void setSubsystemConfigList(List<SubsystemConfig> subsystemConfigList) {
+        this.subsystemConfigList = subsystemConfigList;
     }
 
-    public void addSubsystemToList(int order, SubsystemConfig subsystemConfig) {
-        subsystemList.add(order, subsystemConfig);
+    public void addSubsystemConfigToList(int order, SubsystemConfig subsystemConfig) {
+        subsystemConfigList.add(order, subsystemConfig);
     }
 
 }

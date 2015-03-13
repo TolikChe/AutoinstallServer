@@ -17,7 +17,7 @@ public interface StorageService {
      * @return Объект, содержащий файл конфигурации
      * @throws RuntimeException В случае отсутстивя файла конфигурации или проблем с его чтением возникает исключение
      */
-    public CommonConfig readFromFile (String configFilename) throws RuntimeException;
+    public CommonConfig readFromFile (String configFilename) throws Exception;
 
 
 }

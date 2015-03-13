@@ -118,4 +118,156 @@ public class InstallValuesCmsSrvDb implements InstallValues {
     public boolean validate() {
         return false;
     }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getSysUser() {
+        return sysUser;
+    }
+
+    public void setSysUser(String sysUser) {
+        this.sysUser = sysUser;
+    }
+
+    public String getSysPswd() {
+        return sysPswd;
+    }
+
+    public void setSysPswd(String sysPswd) {
+        this.sysPswd = sysPswd;
+    }
+
+    public String getSysCntp() {
+        return sysCntp;
+    }
+
+    public void setSysCntp(String sysCntp) {
+        this.sysCntp = sysCntp;
+    }
+
+    public String getCrmBase() {
+        return crmBase;
+    }
+
+    public void setCrmBase(String crmBase) {
+        this.crmBase = crmBase;
+    }
+
+    public String getCrmUser() {
+        return crmUser;
+    }
+
+    public void setCrmUser(String crmUser) {
+        this.crmUser = crmUser;
+    }
+
+    public String getCrmPswd() {
+        return crmPswd;
+    }
+
+    public void setCrmPswd(String crmPswd) {
+        this.crmPswd = crmPswd;
+    }
+
+    public String getDefTbs() {
+        return defTbs;
+    }
+
+    public void setDefTbs(String defTbs) {
+        this.defTbs = defTbs;
+    }
+
+    public String getIdxTbs() {
+        return idxTbs;
+    }
+
+    public void setIdxTbs(String idxTbs) {
+        this.idxTbs = idxTbs;
+    }
+
+    public String getAuthRole() {
+        return authRole;
+    }
+
+    public void setAuthRole(String authRole) {
+        this.authRole = authRole;
+    }
+
+    public String getAppRole() {
+        return appRole;
+    }
+
+    public void setAppRole(String appRole) {
+        this.appRole = appRole;
+    }
+
+    public String getAuthUser() {
+        return authUser;
+    }
+
+    public void setAuthUser(String authUser) {
+        this.authUser = authUser;
+    }
+
+    public String getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(String appUser) {
+        this.appUser = appUser;
+    }
+
+    public String getAppPswd() {
+        return appPswd;
+    }
+
+    public void setAppPswd(String appPswd) {
+        this.appPswd = appPswd;
+    }
+
+    public String getApiRole() {
+        return apiRole;
+    }
+
+    public void setApiRole(String apiRole) {
+        this.apiRole = apiRole;
+    }
+
+    public String getCdmBase() {
+        return cdmBase;
+    }
+
+    public void setCdmBase(String cdmBase) {
+        this.cdmBase = cdmBase;
+    }
+
+    public String getCdmUser() {
+        return cdmUser;
+    }
+
+    public void setCdmUser(String cdmUser) {
+        this.cdmUser = cdmUser;
+    }
+
+    public String getCdmPswd() {
+        return cdmPswd;
+    }
+
+    public void setCdmPswd(String cdmPswd) {
+        this.cdmPswd = cdmPswd;
+    }
+
+    public String getTimeTranslate() {
+        return timeTranslate;
+    }
+
+    public void setTimeTranslate(String timeTranslate) {
+        this.timeTranslate = timeTranslate;
+    }
 }

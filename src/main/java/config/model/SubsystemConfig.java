@@ -1,5 +1,7 @@
 package config.model;
 
+import install_values.model.InstallValues;
+
 /**
  * Created by echo on 25.02.2015.
  * Этот класс определяет объект-подсистему, описанную в файле конфигурации
@@ -45,6 +47,11 @@ public class SubsystemConfig {
      * Имя папки, которая получается на выходе после запуска файла ${distribFileName}
      */
     private String distribDirectory;
+    /**
+     * Прочитанный в память файл cms_install_values с параметрами.
+     * В зависимости от типа подсистемы это может быть разный файл.
+     */
+    private InstallValues installValues;
 
 
     /******************************Геттеры и сеттеры*************************************/
@@ -127,5 +134,13 @@ public class SubsystemConfig {
 
     public void setInstallValuesDirectory(String installValuesDirectory) {
         this.installValuesDirectory = installValuesDirectory;
+    }
+
+    public InstallValues getInstallValues() {
+        return installValues;
+    }
+
+    public void setInstallValues(InstallValues installValues) {
+        this.installValues = installValues;
     }
 }
