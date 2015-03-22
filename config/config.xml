@@ -1,27 +1,25 @@
 <config name= "CFG_TEST">
-		<destination_directory>d:\#test_install\cfg1</destination_directory>
-		<prepare_directory>Config/#PREPARE</prepare_directory>
+		<destination_directory>d:/#test_install/cfg1</destination_directory>
+		<!--		<prepare_directory>Config/#PREPARE</prepare_directory> -->
 		<subsystem type="SCR_CMS">
 			<order>0</order>
 			<branch>master</branch>
 			<tag/>
 			<git_url>ssh://srv-git/Repositories/peterservice/SCR_CMS.git</git_url>			
 			<setup_mode>install</setup_mode>
-			<install_values_file>cms_install_values.sql</install_values_file>
-			<install_values_directory>Config/SCR_CMS</install_values_directory>
-			<distrib_file>distrib10.bat</distrib_file>
-			<distrib_directory>Distrib10</distrib_directory>
+			<install_values_file>d:/#GIT_HUB/AutoinstallServer/config/SCR_CMS/cms_install_values.sql</install_values_file>
+			<distrib_make_file>distrib10.bat</distrib_make_file>
+			<distrib_result_directory>Distrib10</distrib_result_directory>
 		</subsystem>
 		<subsystem type="CMS_SRV_DB">
 			<order>1</order>
 			<branch/>
-			<tag>028.00</tag>
+			<tag>029.00</tag>
 			<git_url>ssh://srv-git/Repositories/peterservice/CMS_SRV_DB.git</git_url>
 			<setup_mode>install</setup_mode>
-			<install_values_file>cms_install_values.sql</install_values_file>
-			<install_values_directory>Config/CMS_SRV_DB</install_values_directory>
-			<distrib_file>distrib10.bat</distrib_file>
-			<distrib_directory>Distrib</distrib_directory>
+			<install_values_file>d:/#GIT_HUB/AutoinstallServer/config/CMS_SRV_DB/cms_install_values.sql</install_values_file>
+			<distrib_make_file>distrib10.bat</distrib_make_file>
+			<distrib_result_directory>Distrib</distrib_result_directory>
 		</subsystem>
 		<subsystem type="CMS_DS_ADAPTER">
 			<order>2</order>
@@ -29,10 +27,14 @@
 			<tag/>
 			<git_url>ssh://srv-git/Repositories/peterservice/CMS_DS_ADAPTER2BIS.git</git_url>
 			<setup_mode>install</setup_mode>
-			<install_values_file>cms_install_values.sql</install_values_file>
-			<install_values_directory>Config/CMS_DS_ADAPTER</install_values_directory>
-			<distrib_file>distrib10.bat</distrib_file>
-			<prepare_file>distrib10.bat</prepare_file>
-			<distrib_directory>Distrib10</distrib_directory>
+			<install_values_file>d:/#GIT_HUB/AutoinstallServer/config/CMS_DS_ADAPTER/cms_install_values.sql</install_values_file>
+			<distrib_make_file>distrib10.bat</distrib_make_file>
+			<distrib_result_directory>Distrib10</distrib_result_directory>
 		</subsystem>
+		<subsystem type="CMS_DEBUG">
+			<order>3</order>
+			<tag>036</tag>
+			<git_url>d:/#GIT_HUB/Anatoly.Cherkasov/#AUTO_INSTALL/CMS_DEBUG</git_url>
+			<install_values_file>d:/#GIT_HUB/AutoinstallServer/config/SCR_CMS/cms_install_values.sql</install_values_file>
+		</subsystem>		
 </config>

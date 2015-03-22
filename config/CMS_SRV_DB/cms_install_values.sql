@@ -1,5 +1,3 @@
--- Language of system CMS (possible values are {RUS,ENG})
-DEFINE sysLanguage = RUS
 -- Name of system administrator user
 DEFINE sysUser = SYS
 -- System administrator password
@@ -29,16 +27,16 @@ DEFINE authUser = CRM_DAILY_AUTH
 -- Authorization User Password
 DEFINE authPswd = crmljhjuf06
 -- Application User name
-DEFINE appUser = XXX
+DEFINE appUser = CRM_DAILY_APP
 -- Application User Password
 DEFINE appPswd = CRM_DAILY_APP
 -- Role name for CMS API
 DEFINE apiRole = CRM_DAILY_API_ROLE
---SCR_COMMON base
-DEFINE scrCommonBase = samara
---SCR_COMMON scheme name
-DEFINE scrCommonUser = bis
---SCR_COMMON user password
-DEFINE scrCommonPswd = bis
--- DbLink from CMS schema To SCR_COMMON schema
-DEFINE crmToCommonLink = samara.NET.BILLING.RU
+DEFINE cdmBase = ???
+DEFINE cdmUser = ???
+DEFINE cdmPswd = ???
+/**
+*	CRM-CMS parameters
+*/
+-- use time translate parameter (Y,N)
+DEFINE timeTranslate = Y

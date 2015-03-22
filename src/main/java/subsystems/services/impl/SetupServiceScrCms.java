@@ -1,15 +1,11 @@
 package subsystems.services.impl;
 
 import config.model.SubsystemConfig;
-import subsystems.services.SetupService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 /**
  * Created by Anatoly.Cherkasov on 26.01.2015.
@@ -17,6 +13,8 @@ import java.nio.file.StandardCopyOption;
  */
 public class SetupServiceScrCms extends SetupServiceImpl {
 
+    // Объявляем переменную логгера
+    private Logger log = LoggerFactory.getLogger(SetupServiceScrCms.class);
 
     /**
      * Устанавливаем подсистему.
@@ -27,8 +25,11 @@ public class SetupServiceScrCms extends SetupServiceImpl {
      * @return TRUE - если все успешно
      */
     @Override
-    public boolean setupSubsystem(SubsystemConfig subsystem, String destination) throws Exception {
-// Перенесем в склонированную папку файл с параметрами
+    public void setupSubsystem(SubsystemConfig subsystem, String destination) throws Exception {
+
+        log.info("Выполняется установка подсистемы " + subsystem.getOrder() +"_"+ subsystem.getType());
+
+        // Перенесем в склонированную папку файл с параметрами
         String command;
 
         //
@@ -36,32 +37,29 @@ public class SetupServiceScrCms extends SetupServiceImpl {
         // Поэтому надо сначала перейти в соответствующую папку а потом запускать батник
         // Подготавливаем команду
         if (subsystem.getSetupMode().equals("install")) {
-            command = "cmd /c \"cd /d " + destination + "/Srv_Part/" + subsystem.getDistribDirectory() + " && CreateCMS.bat /full\"";
+            command = "cmd /c \"cd /d " + destination + "/Srv_Part/" + subsystem.getDistribResultDirectory() + " && CreateCMS.bat /full\"";
         }
         else if (subsystem.getSetupMode().equals("update")) {
-            command = "cmd /c \"cd /d " + destination + "/Srv_Part/" + subsystem.getDistribDirectory() + " && UpdateCMS.bat\"";
+            command = "cmd /c \"cd /d " + destination + "/Srv_Part/" + subsystem.getDistribResultDirectory() + " && UpdateCMS.bat\"";
         }
         else
             throw new Exception("Ошибка при установке подсистемы SCR_CMS");
         try {
-            System.out.println(command);
+            log.info(command);
             Process process = Runtime.getRuntime().exec(command);
 
-            /*
+
             // Вывод текста из консоли
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null)
             {
-                System.out.println(line);
+                log.info(line);
             }
-            */
+
             process.waitFor();
         } catch (Exception e) {
-            throw new Exception("Ошибка при выполнении команды. Команда : " + command +
-                    "\n" + e.getMessage());
+            throw new Exception("Ошибка при выполнении команды. Команда : " + command + "\n" + e.getMessage());
         }
-
-        return true;
     }
 }

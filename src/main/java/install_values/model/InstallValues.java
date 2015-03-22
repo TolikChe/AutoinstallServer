@@ -17,7 +17,7 @@ public interface InstallValues {
      * Построим объект из строк. Распарсим строки в соответствии с реализацией класса
      * @param stringList Список строк, которые будем разбирать
      */
-    public void fromString(List<String> stringList) throws RuntimeException;
+    public void fromString(List<String> stringList) throws Exception;
 
     /**
      * Проверка того что объект валиден по своему наполнению

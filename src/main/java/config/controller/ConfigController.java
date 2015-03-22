@@ -3,17 +3,26 @@ package config.controller;
 import config.model.CommonConfig;
 import config.model.SubsystemConfig;
 import config.services.impl.ConfigStorageServiceImpl;
-import install_values.services.impl.InstallValuesStorageServiceImpl;
+import install_values.controller.InstallValuesController;
+import install_values.model.InstallValues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Anatoly.Cherkasov on 13.03.2015.
  * Этот клас содержит функции по работе с конфигурацией.
+ * Для работы с конфигурацией нужно использовать только его.
  * Контроллер знает как прочитать файлы с конфигурацией и параметрами в объект
  * Контроллер знает как сохранить объект в файлы с конфигурайией и параметрами
  */
 public class ConfigController {
+
+    // Объявляем переменную логгера
+    private static Logger log = LoggerFactory.getLogger(ConfigController.class);
 
     /**
      * Получим полностью объект конфигурацию
@@ -24,8 +33,7 @@ public class ConfigController {
     public static CommonConfig getConfig( String configFileName ) {
 
         ConfigStorageServiceImpl configStorageService = new ConfigStorageServiceImpl();
-        InstallValuesStorageServiceImpl installValuesStorageService = new InstallValuesStorageServiceImpl();
-
+        InstallValuesController installValuesController = new InstallValuesController();
 
         // Вычитываем главный файл конфигурации в объект
         // Если возникла ошибка чтения то прерываем операцию
@@ -42,27 +50,24 @@ public class ConfigController {
         //
         // Для каждой подсистемы из файлы конфигурации вычитываем его файл cms_install_values
         // Если возникла ошибка чтения то перехаодим к следующей подсистеме.
-        List<SubsystemConfig> subsystemConfigList = commonConfig.getSubsystemConfigList();
-        SubsystemConfig subsystemConfig = null;
-        for (int x = 0; x < subsystemConfigList.size(); x++)
+        TreeMap<Integer, SubsystemConfig> subsystemConfigTreeMap = commonConfig.getSubsystemConfigTreeMap();
+        for ( Map.Entry<Integer, SubsystemConfig> subsystemConfigMapEntry : subsystemConfigTreeMap.entrySet() )
         {
-            // Выдернем элемент из списка
-            subsystemConfig = subsystemConfigList.get(x);
-            try {
-                // Изменим элемент из списка
-                subsystemConfig.setInstallValues(installValuesStorageService.readFromFile( subsystemConfig.getInstallValuesDirectory() + "/" +  subsystemConfig.getInstallValuesFileName()));
-            } catch (Exception ex) {
-                System.out.println("Ошибка при чтении файла " + subsystemConfig.getInstallValuesFileName() + " для подсистемы " + subsystemConfig.getOrder() + "_" + subsystemConfig.getType());
-                System.out.println(ex.getMessage());
-                ex.printStackTrace();
-                return null;
+            SubsystemConfig subsystemConfig = subsystemConfigMapEntry.getValue();
+            // Изменим элемент из списка
+            // Для подсистемы прочитаем её файл cms_install_values.sql
+            InstallValues installValues = installValuesController.getInstallValues(subsystemConfig);
+            if (installValues == null) {
+                log.info("Файл cms_install_values не был прочитан!");
             }
-            // Заменим элемент в спике конфигураций подсистем
-            subsystemConfigList.set(x, subsystemConfig);
+            // Сохраним полученный объект cms_install_values в конфигурации подсистемы
+            subsystemConfig.setInstallValues(installValues);
+            // Заменим элемент "конфигурация подсистемы" в спике конфигураций подсистем
+            subsystemConfigTreeMap.put(subsystemConfigMapEntry.getKey(),subsystemConfig);
         }
 
-        // Перепишем список конфигураций подсистем
-        commonConfig.setSubsystemConfigList(subsystemConfigList);
+        // Перепишем список все конфигураций подсистем в объекте Конфиг
+        commonConfig.setSubsystemConfigTreeMap(subsystemConfigTreeMap);
 
         // Вернем заполненный объект конфигурации
         return commonConfig;

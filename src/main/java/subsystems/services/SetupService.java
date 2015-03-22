@@ -14,17 +14,17 @@ public interface SetupService {
      * @param destination Папка в которую надо склонировать подсистему
      * @return Путь по которому склонирована подсистема. Если NULL то ошибка клонирования
      */
-    public String cloneSubsystem(SubsystemConfig subsystem, String destination, Boolean deleteBeforeClone) throws Exception;
+    public String cloneSubsystem(SubsystemConfig subsystem, String destination) throws Exception;
 
 
     /**
-     * Подготавливаем текст подсистемы. Деалем из Source Distrib.
+     * Деалем из Source Distrib.
      * Переносим в в папку подсистемы файл cms_install_values и вызываем distib10.bat что бы исходники превратились в готовые файлы
      * @param subsystem Подсистема, чьи исходники надо подготовить. Её исходники должны быть предваритально склонированы
      * @param destination Путь, куда была склонирована подсистема
      * @return TRUE - если все успешно
      */
-    public boolean prepareSources (SubsystemConfig subsystem, String destination) throws Exception;
+    public void makeDistrib(SubsystemConfig subsystem, String destination) throws Exception;
 
 
     /**
@@ -34,5 +34,5 @@ public interface SetupService {
      * @param destination Путь, куда была склонирована подсистема
      * @return TRUE - если все успешно
      */
-    public boolean setupSubsystem (SubsystemConfig subsystem, String destination) throws Exception;
+    public void setupSubsystem (SubsystemConfig subsystem, String destination) throws Exception;
 }

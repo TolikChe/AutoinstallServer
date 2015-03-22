@@ -1,10 +1,14 @@
 package subsystems.services.impl;
 
 import config.model.SubsystemConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import subsystems.services.SetupService;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -16,33 +20,20 @@ import java.nio.file.StandardCopyOption;
  */
 public abstract class SetupServiceImpl implements SetupService {
 
-
-    // Используется для подготовки перед клонированием
-    private static void removeDirectory(File dir) {
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null && files.length > 0) {
-                for (File aFile : files) {
-                    removeDirectory(aFile);
-                }
-            }
-            dir.delete();
-        } else {
-            dir.delete();
-        }
-    }
-
+    // Объявляем переменную логгера
+    private Logger log = LoggerFactory.getLogger(SetupServiceImpl.class);
 
     /**
      * Клонирование исходников подсистемы в указанную папку
      *
      * @param subsystem         Подсистема, чьи файлы надо склонировать
      * @param destination       Папка в которую надо склонировать подсистему
-     * @param deleteBeforeClone
      * @return Путь по которому склонирована подсистема. Если NULL то ошибка клонирования
      */
     @Override
-    public String cloneSubsystem(SubsystemConfig subsystem, String destination, Boolean deleteBeforeClone) throws Exception {
+    public String cloneSubsystem(SubsystemConfig subsystem, String destination) throws Exception {
+
+        log.info("Выполняется клонировение подсистемы " + subsystem.getOrder() +"_"+ subsystem.getType());
 
         // Получим тип подсистемы, которую надо склонировать
         String subsType = subsystem.getType();
@@ -55,15 +46,10 @@ public abstract class SetupServiceImpl implements SetupService {
         // Получаем порядковый номер подсистемы
         int subsOrder = subsystem.getOrder();
 
-        //------ Удаляем если надо директорию,куда будем клонировать данные
-        if (deleteBeforeClone) {
-            removeDirectory(new File(destination));
-        }
-
         // ----- Конструируем команду для клонирования ----
         // Если заданы метка и ветка предупредим об этом пользователя
         if (!subsTag.isEmpty() && !subsBranch.isEmpty()){
-            System.out.println("Внимание! Заданы метка и ветка одновременно. Будет использована метка.");
+            log.info("Внимание! Заданы метка и ветка одновременно. Будет использована метка.");
         }
         // Папка, куда будет перенесено содержимое подсистемы в гите
         String dirName = destination;
@@ -82,18 +68,17 @@ public abstract class SetupServiceImpl implements SetupService {
 
         // Вызываем команду клонирования
         try {
-            System.out.println(command);
+            log.info(command);
             Process process = Runtime.getRuntime().exec(command);
 
             // Вывод текста из консоли
-            /*
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null)
             {
-                System.out.println(line);
+                log.info(line);
             }
-            */
+
             process.waitFor();
         } catch (Exception e) {
             throw new Exception("Ошибка при клонирование подсистемы " + subsType +
@@ -107,7 +92,7 @@ public abstract class SetupServiceImpl implements SetupService {
     }
 
     /**
-     * Подготавливаем текст подсистемы. Деалем из Source Distrib.
+     * Деалем из Source Distrib.
      * Переносим в в папку подсистемы файл cms_install_values и вызываем distib10.bat что бы исходники превратились в готовые файлы
      *
      * @param subsystem   Подсистема, чьи исходники надо подготовить. Её исходники должны быть предваритально склонированы
@@ -115,44 +100,46 @@ public abstract class SetupServiceImpl implements SetupService {
      * @return TRUE - если все успешно
      */
     @Override
-    public boolean prepareSources(SubsystemConfig subsystem, String destination) throws Exception {
+    public void makeDistrib(SubsystemConfig subsystem, String destination) throws Exception {
+
+        log.info("Выполняется создание дистрибутива подсистемы " + subsystem.getOrder() +"_"+ subsystem.getType());
+
         // Перенесем в склонированную папку файл с параметрами
         String command;
 
         try {
-            Files.copy(Paths.get(subsystem.getInstallValuesDirectory() + "/" + subsystem.getInstallValuesFileName()), Paths.get(destination + "/Srv_Part/Source/" + subsystem.getInstallValuesFileName()), StandardCopyOption.REPLACE_EXISTING);
+            log.info("copy " + Paths.get( subsystem.getInstallValuesFileName() ) + " to " + Paths.get(destination + "/Srv_Part/Source/" + new File(subsystem.getInstallValuesFileName()).getName()) );
+            Files.copy(Paths.get(subsystem.getInstallValuesFileName()), Paths.get(destination + "/Srv_Part/Source/" + new File(subsystem.getInstallValuesFileName()).getName()), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new Exception("Ошибка при копировании файла с параметрами в папку с клонированной подсистемой" +
                     "\nФайл cms_install_values: " + subsystem.getInstallValuesFileName() +
-                    "\nМесто назначения : " + destination + "/Srv_Part/Source/" + subsystem.getInstallValuesFileName() +
+                    "\nМесто назначения : " + destination + "/Srv_Part/Source/" + new File(subsystem.getInstallValuesFileName()).getName() +
                     "\n" + e.getMessage());
         }
         //
         // К сожалению в связи с особенностями системы батник может быть запущен только локально.
         // Поэтому надо сначала перейти в соответствующую папку а потом запускать батник
         // Подготавливаем команду
-        command = "cmd /c \"cd /d " + destination + "/Srv_Part/Source && " + subsystem.getDistribFileName() + "\"";
+        command = "cmd /c \"cd /d " + destination + "/Srv_Part/Source && " + subsystem.getDistribMakeFileName() + "\"";
         try {
-            System.out.println(command);
+            log.info(command);
             Process process = Runtime.getRuntime().exec(command);
 
-            /*
+
             // Вывод текста из консоли
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = bufferedReader.readLine()) != null)
             {
-                System.out.println(line);
+                log.info(line);
             }
-            */
+
             process.waitFor();
         } catch (Exception e) {
-            throw new Exception("Ошибка при выполнении файла " + subsystem.getDistribFileName() +
+            throw new Exception("Ошибка при выполнении файла " + subsystem.getDistribMakeFileName() +
                     "\nКоманда : " + command +
                     "\n" + e.getMessage());
         }
-
-        return true;
     }
 
 }

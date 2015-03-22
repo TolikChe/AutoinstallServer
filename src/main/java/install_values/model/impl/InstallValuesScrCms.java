@@ -179,7 +179,7 @@ public class InstallValuesScrCms implements InstallValues {
      * @param stringList Список строк, которые будем разбирать
      * @return TRUE если успешно
      */
-    public void fromString(List<String> stringList) throws RuntimeException{
+    public void fromString(List<String> stringList) throws Exception{
         // Сконструируем regexp выражение
         String pattern = "^DEFINE\\s+([A-Za-z]+)\\s+=\\s*([\\S']+\\s*[\\S']+)$";
         Pattern p = Pattern.compile(pattern);
@@ -214,7 +214,7 @@ public class InstallValuesScrCms implements InstallValues {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка при разборе содержимого файла cms_install_values для подсистемы SCR_CMS.\n Имя файла: " + filename);
+            throw new Exception("Ошибка при разборе содержимого файла cms_install_values для подсистемы SCR_CMS.\n Имя файла: " + filename);
         }
     }
 

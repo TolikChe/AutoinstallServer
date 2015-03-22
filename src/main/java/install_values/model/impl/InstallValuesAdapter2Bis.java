@@ -1,15 +1,22 @@
 package install_values.model.impl;
 
 import install_values.model.InstallValues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Anatoly.Cherkasov on 16.01.2015.
  * Класс описывает файл CMS_INSTALL_VALUES.sql для подсистемы SCR_CMS
  */
 public class InstallValuesAdapter2Bis implements InstallValues {
+
+    // Объявляем переменную логгера
+    private Logger log = LoggerFactory.getLogger(InstallValuesAdapter2Bis.class);
 
     /**
      * Имя файла конфигурации
@@ -130,11 +137,121 @@ public class InstallValuesAdapter2Bis implements InstallValues {
      * @param stringList Список строк, которые будем разбирать
      */
     @Override
-    public void fromString(List<String> stringList) throws RuntimeException{
+    public void fromString(List<String> stringList) throws Exception{
+        // Сконструируем regexp выражение
+        String pattern = "^DEFINE\\s+([A-Za-z]+)\\s+=\\s*([\\S']+\\s*[\\S']+)$";
+        Pattern p = Pattern.compile(pattern);
+        Matcher m;
+        // Прочитаем файл по строкам
+        try {
+            for (String line : stringList) {
+                if (line.contains("DEFINE")) {
+                    m = p.matcher(line);
+                    while (m.find()) {
+                        if (m.group(1).equals("sysUser"))            { sysUser  = m.group(2); }
+                        else if (m.group(1).equals("sysPswd"))       { sysPswd  = m.group(2); }
+                        else if (m.group(1).equals("sysCntp"))       { sysCntp  = m.group(2); }
+                        else if (m.group(1).equals("crmBase"))       { crmBase  = m.group(2); }
+                        else if (m.group(1).equals("crmUser"))       { crmUser  = m.group(2); }
+                        else if (m.group(1).equals("crmPswd"))       { crmPswd  = m.group(2); }
+                        else if (m.group(1).equals("appRole"))       { appRole  = m.group(2); }
+                        else if (m.group(1).equals("appUser"))       { appUser  = m.group(2); }
+                        else if (m.group(1).equals("appPswd"))       { appPswd  = m.group(2); }
+                        else if (m.group(1).equals("adapterBase"))   { adapterBase  = m.group(2); }
+                        else if (m.group(1).equals("adapterUser"))   { adapterUser  = m.group(2); }
+                        else if (m.group(1).equals("adapterPswd"))   { adapterPswd  = m.group(2); }
+                        else if (m.group(1).equals("sourceKeyName")) { sourceKeyName  = m.group(2); }
+                        else if (m.group(1).equals("defTbs"))        { defTbs  = m.group(2); }
+                        else if (m.group(1).equals("idxTbs"))        { idxTbs  = m.group(2); }
+                        else if (m.group(1).equals("scrCommonBase")) { scrCommonBase  = m.group(2); }
+                        else if (m.group(1).equals("scrCommonUser")) { scrCommonUser  = m.group(2); }
+                        else if (m.group(1).equals("scrCommonPswd")) { scrCommonPswd  = m.group(2); }
+                        else if (m.group(1).equals("crmToCommonLink")) { crmToCommonLink  = m.group(2); }
+                        else if (m.group(1).equals("bisBase"))       { bisBase  = m.group(2); }
+                        else if (m.group(1).equals("bisSchema"))     { bisSchema  = m.group(2); }
+                        else if (m.group(1).equals("bisPswd"))       { bisPswd  = m.group(2); }
+                        else if (m.group(1).equals("dbLinkToBis"))   { dbLinkToBis  = m.group(2); }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("Ошибка при разборе содержимого файла cms_install_values для подсистемы CMS_DS_ADAPTER.\n Имя файла: " + filename);
+        }
     }
 
     public String toString(){
-        return "";
+        // Строим строку
+        StringBuilder sb = new StringBuilder();
+        sb.append("/**********************************************\n" +
+                "*             BASE SYS identification           *\n" +
+                "***********************************************/\n");
+
+        sb.append("-- Name of system administrator user\n");
+        sb.append("DEFINE sysUser = ").append(sysUser).append("\n");
+        sb.append("-- System administrator password\n");
+        sb.append("DEFINE sysPswd = ").append(sysPswd).append("\n");
+        sb.append("-- Type of connect for System administrator\n");
+        sb.append("DEFINE sysCntp = ").append(sysCntp).append("\n\n");
+
+        sb.append("/**********************************************\n" +
+                "*            BASE where CMS has installed       *\n" +
+                "***********************************************/\n");
+        sb.append("-- CRM database name\n");
+        sb.append("DEFINE crmBase = ").append(crmBase).append("\n");
+        sb.append("-- Name of CRM schema\n");
+        sb.append("DEFINE crmUser = ").append(crmUser).append("\n");
+        sb.append("-- CRM user password\n");
+        sb.append("DEFINE crmPswd = ").append(crmPswd).append("\n");
+        sb.append("-- Application Role name\n");
+        sb.append("DEFINE appRole = ").append(appRole).append("\n\n");
+        sb.append("-- Application User name\n");
+        sb.append("DEFINE appUser = ").append(appUser).append("\n");
+        sb.append("-- Application User Password\n");
+        sb.append("DEFINE appPswd = ").append(appPswd).append("\n\n");
+
+        sb.append("/****************************************************\n" +
+                "*          BASE where ADAPTER has installed           *\n" +
+                "*****************************************************/\n");
+        sb.append("-- Adapter database name\n");
+        sb.append("DEFINE adapterBase = ").append(adapterBase).append("\n");
+        sb.append("-- Adapter schema name\n");
+        sb.append("DEFINE adapterUser = ").append(adapterUser).append("\n");
+        sb.append("-- Adapter password\n");
+        sb.append("DEFINE adapterPswd = ").append(adapterPswd).append("\n");
+
+        sb.append("DEFINE sourceKeyName = ").append(sourceKeyName).append("\n");
+
+        sb.append("-- default tablespace for ADAPTER\n");
+        sb.append("DEFINE defTbs = ").append(defTbs).append("\n");
+        sb.append("-- index tablespace for ADAPTER\n");
+        sb.append("DEFINE idxTbs = ").append(idxTbs).append("\n");
+
+        sb.append("/****************************************************\n" +
+                "*        BASE where SCR_COMMON has installed        *\n" +
+                "*****************************************************/\n");
+        sb.append("--SCR_COMMON base\n");
+        sb.append("DEFINE scrCommonBase = ").append(scrCommonBase).append("\n");
+        sb.append("--SCR_COMMON scheme name\n");
+        sb.append("DEFINE scrCommonUser = ").append(scrCommonUser).append("\n");
+        sb.append("--SCR_COMMON user password\n");
+        sb.append("DEFINE scrCommonPswd = ").append(scrCommonPswd).append("\n");
+        sb.append("-- DbLink from CMS schema To SCR_COMMON schema\n");
+        sb.append("DEFINE crmToCommonLink = ").append(crmToCommonLink).append("\n");
+
+        sb.append("/****************************************************\n" +
+                "*           BASE where BIS has installed              *\n" +
+                "*****************************************************/\n");
+        sb.append("-- BIS database name\n");
+        sb.append("DEFINE bisBase = ").append(bisBase).append("\n");
+        sb.append("-- BIS schema name\n");
+        sb.append("DEFINE bisSchema = ").append(bisSchema).append("\n");
+        sb.append("-- BIS password\n");
+        sb.append("DEFINE bisPswd = ").append(bisPswd).append("\n");
+        sb.append("-- Name of DB Link from ADAPTER to BIS\n");
+        sb.append("DEFINE dbLinkToBis = ").append(crmToCommonLink).append("\n");
+
+        // Возвращаем сконструированную строку
+        return sb.toString();
     }
 
     /**
@@ -142,7 +259,118 @@ public class InstallValuesAdapter2Bis implements InstallValues {
      * @return TRUE - если успешно
      */
     public boolean validate(){
-        return false;
+        if ( sysUser.equals("???") || sysUser == null) {
+            log.error("Validate error: check sysUser");
+            return false;
+        }
+
+        if (  sysPswd.equals("???") || sysPswd == null) {
+            log.error("Validate error: check sysPswd");
+            return false;
+        }
+
+        if (  sysCntp.equals("???") || sysCntp == null) {
+            log.error("Validate error: check sysCntp");
+            return false;
+        }
+
+        if ( crmBase.equals("???") || crmBase == null) {
+            log.error("Validate error: check sysLanguage");
+            return false;
+        }
+
+        if ( crmUser.equals("???") || crmUser == null) {
+            log.error("Validate error: check crmUser");
+            return false;
+        }
+
+        if ( crmPswd.equals("???") ||  crmPswd == null) {
+            log.error("Validate error: check crmPswd");
+            return false;
+        }
+
+        if ( defTbs.equals("???") || defTbs == null) {
+            log.error("Validate error: check defTbs");
+            return false;
+        }
+
+        if ( idxTbs.equals("???") || idxTbs == null) {
+            log.error("Validate error: check idxTbs");
+            return false;
+        }
+
+        if ( appRole.equals("???") || appRole == null) {
+            log.error("Validate error: check appRole");
+            return false;
+        }
+
+        if ( appUser.equals("???") || appUser == null) {
+            log.error("Validate error: check appUser");
+            return false;
+        }
+
+        if ( appPswd.equals("???") || appPswd == null) {
+            log.error("Validate error: check appPswd");
+            return false;
+        }
+
+        if ( adapterBase.equals("???") || adapterBase == null) {
+            log.error("Validate error: check adapterBase");
+            return false;
+        }
+
+        if ( adapterUser.equals("???") || adapterUser == null) {
+            log.error("Validate error: check adapterUser");
+            return false;
+        }
+
+        if ( adapterPswd.equals("???") || adapterPswd == null) {
+            log.error("Validate error: check adapterPswd");
+            return false;
+        }
+
+        if ( sourceKeyName.equals("???") || sourceKeyName == null) {
+            log.error("Validate error: check sourceKeyName");
+            return false;
+        }
+
+        if ( scrCommonUser.equals("???") || scrCommonUser == null) {
+            log.error("Validate error: check scrCommonUser");
+            return false;
+        }
+
+        if ( scrCommonPswd.equals("???") || scrCommonPswd == null) {
+            log.error("Validate error: check scrCommonPswd");
+            return false;
+        }
+
+        if ( crmToCommonLink.equals("???") || crmToCommonLink == null) {
+            log.error("Validate error: check crmToCommonLink");
+            return false;
+        }
+
+        if ( bisBase.equals("???") || bisBase == null) {
+            log.error("Validate error: check bisBase");
+            return false;
+        }
+
+
+        if ( bisSchema.equals("???") || bisSchema == null) {
+            log.error("Validate error: check bisSchema");
+            return false;
+        }
+
+        if ( bisPswd.equals("???") || bisPswd == null) {
+            log.error("Validate error: check bisPswd");
+            return false;
+        }
+
+        if ( dbLinkToBis.equals("???") || dbLinkToBis == null) {
+            log.error("Validate error: check dbLinkToBis");
+            return false;
+        }
+
+        return true;
     }
 
     /**

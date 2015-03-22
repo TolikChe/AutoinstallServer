@@ -59,19 +59,12 @@ public class ConfigStorageServiceImpl implements StorageService{
         // Получаем значения из файла парметров
         // Сохраним имя конфигурации
         cfg.setConfigName(doc.getDocumentElement().getAttribute("name"));
+        // Получим строку для подключения к схеме
+        cfg.setTns(doc.getElementsByTagName("tns").item(0).getTextContent());
         // Сохраним путь, в который должны быть скопированы исходники
         cfg.setDestinationDirectory(doc.getElementsByTagName("destination_directory").item(0).getTextContent());
         // Сохраним путь, по которому находятся вспомогательные файлы
-        cfg.setPrepareDirectory(doc.getElementsByTagName("prepare_directory").item(0).getTextContent());
-
-        /*
-        File file = new File(prepareDirectory);
-        // Если папки не существует то создадим её
-        if (!(file.exists() && file.isDirectory())) {
-            throw new Exception("Ошибка. Папка (" + file.getAbsoluteFile() + ") по указанному пути не существует ");
-        }
-        this.prepareDirectory = file.getAbsoluteFile().toString();
-        */
+        // cfg.setPrepareDirectory(doc.getElementsByTagName("prepare_directory").item(0).getTextContent());
 
         // Получим список подсистем в файле конфига
         NodeList nList = doc.getElementsByTagName("subsystem");
@@ -88,17 +81,23 @@ public class ConfigStorageServiceImpl implements StorageService{
                 // Наполним объект "Настроечные параметры подсистемы"
                 SubsystemConfig subsCfg = new SubsystemConfig();
                 subsCfg.setType(eElement.getAttribute("type"));
-                subsCfg.setOrder(Integer.parseInt(eElement.getElementsByTagName("order").item(0).getTextContent()));
-                subsCfg.setBranch(eElement.getElementsByTagName("branch").item(0).getTextContent());
-                subsCfg.setTag(eElement.getElementsByTagName("tag").item(0).getTextContent());
-                subsCfg.setGitUrl(eElement.getElementsByTagName("git_url").item(0).getTextContent());
-                subsCfg.setSetupMode(eElement.getElementsByTagName("setup_mode").item(0).getTextContent());
-                subsCfg.setInstallValuesFileName(eElement.getElementsByTagName("install_values_file").item(0).getTextContent());
-                subsCfg.setInstallValuesDirectory(eElement.getElementsByTagName("install_values_directory").item(0).getTextContent());
-                subsCfg.setDistribFileName(eElement.getElementsByTagName("distrib_file").item(0).getTextContent());
-                subsCfg.setDistribDirectory(eElement.getElementsByTagName("distrib_directory").item(0).getTextContent());
+                if (subsCfg.getType().equals("CMS_DEBUG")) {
+                    subsCfg.setOrder(Integer.parseInt(eElement.getElementsByTagName("order").item(0).getTextContent()));
+                    subsCfg.setTag(eElement.getElementsByTagName("tag").item(0).getTextContent());
+                    subsCfg.setGitUrl(eElement.getElementsByTagName("git_url").item(0).getTextContent());
+                    subsCfg.setInstallValuesFileName(eElement.getElementsByTagName("install_values_file").item(0).getTextContent());
+                } else {
+                    subsCfg.setOrder(Integer.parseInt(eElement.getElementsByTagName("order").item(0).getTextContent()));
+                    subsCfg.setBranch(eElement.getElementsByTagName("branch").item(0).getTextContent());
+                    subsCfg.setTag(eElement.getElementsByTagName("tag").item(0).getTextContent());
+                    subsCfg.setGitUrl(eElement.getElementsByTagName("git_url").item(0).getTextContent());
+                    subsCfg.setSetupMode(eElement.getElementsByTagName("setup_mode").item(0).getTextContent());
+                    subsCfg.setInstallValuesFileName(eElement.getElementsByTagName("install_values_file").item(0).getTextContent());
+                    subsCfg.setDistribMakeFileName(eElement.getElementsByTagName("distrib_make_file").item(0).getTextContent());
+                    subsCfg.setDistribResultDirectory(eElement.getElementsByTagName("distrib_result_directory").item(0).getTextContent());
+                }
                 // Добавить подсистему в список подсистем
-                cfg.addSubsystemConfigToList(subsCfg.getOrder(), subsCfg);
+                cfg.addSubsystemConfigToMap(subsCfg.getOrder(), subsCfg);
             }
         }
         // Возвращаем полученную конфигурацию

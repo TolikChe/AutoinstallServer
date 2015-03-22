@@ -3,8 +3,11 @@ package prepare.controller;
 import config.model.CommonConfig;
 import config.model.SubsystemConfig;
 import install_values.model.impl.InstallValuesScrCms;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import prepare.service.PrepareService;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,6 +15,9 @@ import java.util.List;
  *
  */
 public class PrepareController {
+
+    // Объявляем переменную логгера
+    private static Logger log = LoggerFactory.getLogger(PrepareController.class);
 
     /**
      * Выполняется подготовительные действия перед новой установкой.
@@ -22,36 +28,26 @@ public class PrepareController {
       */
     public static boolean prepare(CommonConfig commonConfig) {
         PrepareService prepareService = new PrepareService();
-        InstallValuesScrCms installValuesScrCms = null;
-
-        // Надем в конфиге первую подсистему SCR_CMS.
-        // Возьмем её файл cms_install_values и передадим его как параметр.
-        List<SubsystemConfig> subsystemConfigList = commonConfig.getSubsystemConfigList();
-        for (SubsystemConfig subsystemConfig : subsystemConfigList){
-            if (subsystemConfig.getType().equals("SCR_CMS")) {
-                installValuesScrCms = (InstallValuesScrCms)subsystemConfig.getInstallValues();
-                break;
-            }
-        }
 
         // Выполним подготовку базы перед установкой в нее новых схем.
         try {
-            prepareService.prepareBase(installValuesScrCms);
+            prepareService.prepareBase(commonConfig);
         } catch (Exception ex) {
-            System.out.println("Ошибка в процессе подготовки к установке");
-            System.out.println("Ошибка при подготовке базы");
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
+            log.error("Ошибка в процессе подготовки к установке");
+            log.error("Ошибка при подготовке базы");
+            log.error(ex.getMessage());
+            log.error(Arrays.toString(ex.getStackTrace()));
+            return false;
         }
 
         // Выполним подготовку файловой системы.
         try {
             prepareService.prepareFileSystem(commonConfig);
         } catch (Exception ex) {
-            System.out.println("Ошибка в процессе подготовки к установке");
-            System.out.println("Ошибка при подготовке файловой системы");
-            System.out.println(ex.getMessage());
-            ex.printStackTrace();
+            log.error("Ошибка в процессе подготовки к установке");
+            log.error("Ошибка при подготовке файловой системы");
+            log.error(ex.getMessage());
+            log.error(Arrays.toString(ex.getStackTrace()));
             return false;
         }
 

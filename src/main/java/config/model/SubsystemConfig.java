@@ -36,17 +36,13 @@ public class SubsystemConfig {
      */
     private String installValuesFileName;
     /**
-     * Директория где лежит файла с параметрами
-     */
-    private String installValuesDirectory;
-    /**
      * Имя файла, который делает дистрибутив (обычно это distrib10.bat или distrib.bat)
      */
-    private String distribFileName;
+    private String distribMakeFileName;
     /**
-     * Имя папки, которая получается на выходе после запуска файла ${distribFileName}
+     * Имя папки, которая получается на выходе после запуска файла ${distribMakeFileName}
      */
-    private String distribDirectory;
+    private String distribResultDirectory;
     /**
      * Прочитанный в память файл cms_install_values с параметрами.
      * В зависимости от типа подсистемы это может быть разный файл.
@@ -112,28 +108,20 @@ public class SubsystemConfig {
         this.installValuesFileName = installValuesFileName;
     }
 
-    public String getDistribFileName() {
-        return distribFileName;
+    public String getDistribMakeFileName() {
+        return distribMakeFileName;
     }
 
-    public void setDistribFileName(String distribFileName) {
-        this.distribFileName = distribFileName;
+    public void setDistribMakeFileName(String distribMakeFileName) {
+        this.distribMakeFileName = distribMakeFileName;
     }
 
-    public String getDistribDirectory() {
-        return distribDirectory;
+    public String getDistribResultDirectory() {
+        return distribResultDirectory;
     }
 
-    public void setDistribDirectory(String distribDirectory) {
-        this.distribDirectory = distribDirectory;
-    }
-
-    public String getInstallValuesDirectory() {
-        return installValuesDirectory;
-    }
-
-    public void setInstallValuesDirectory(String installValuesDirectory) {
-        this.installValuesDirectory = installValuesDirectory;
+    public void setDistribResultDirectory(String distribResultDirectory) {
+        this.distribResultDirectory = distribResultDirectory;
     }
 
     public InstallValues getInstallValues() {

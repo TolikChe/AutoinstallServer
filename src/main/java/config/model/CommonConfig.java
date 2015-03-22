@@ -2,6 +2,7 @@ package config.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by Anatoly.Cherkasov on 19.01.2015.
@@ -22,7 +23,12 @@ public class CommonConfig {
     /**
      * В этой папке находятся скрипты, которые должны выполнятсья перед установкой подсистем
      */
-    private String prepareDirectory;
+    // private String prepareDirectory;
+    /**
+     * Это строка из tnsnames.ora которая описывает подключение к базе ntdb10
+     * Как полчить её или обойтись без нее я не понял.
+     */
+    private String tns;
     /**
      * Имя файла, содержищего файл конфигурации. Заполняется в процессе работы
      */
@@ -30,7 +36,7 @@ public class CommonConfig {
     /**
      * Список подсистем, описанных в конфигурации
      */
-    private List<SubsystemConfig> subsystemConfigList = new ArrayList<SubsystemConfig>(10);
+    private TreeMap<Integer, SubsystemConfig> subsystemConfigTreeMap = new TreeMap<Integer, SubsystemConfig>();
 
     /******************************Геттеры и сеттеры*************************************/
 
@@ -38,12 +44,14 @@ public class CommonConfig {
         return destinationDirectory;
     }
 
+/*
     public String getPrepareDirectory() {
         return prepareDirectory;
     }
+*/
 
-    public List<SubsystemConfig> getSubsystemConfigList() {
-        return subsystemConfigList;
+    public TreeMap<Integer, SubsystemConfig> getSubsystemConfigTreeMap() {
+        return subsystemConfigTreeMap;
     }
 
     public String getConfigFilename() {
@@ -66,16 +74,24 @@ public class CommonConfig {
         this.destinationDirectory = destinationDirectory;
     }
 
+    /*
     public void setPrepareDirectory(String prepareDirectory) {
         this.prepareDirectory = prepareDirectory;
     }
-
-    public void setSubsystemConfigList(List<SubsystemConfig> subsystemConfigList) {
-        this.subsystemConfigList = subsystemConfigList;
+*/
+    public void setSubsystemConfigTreeMap(TreeMap<Integer, SubsystemConfig> subsystemConfigTreeMap) {
+        this.subsystemConfigTreeMap = subsystemConfigTreeMap;
     }
 
-    public void addSubsystemConfigToList(int order, SubsystemConfig subsystemConfig) {
-        subsystemConfigList.add(order, subsystemConfig);
+    public void addSubsystemConfigToMap(int order, SubsystemConfig subsystemConfig) {
+        subsystemConfigTreeMap.put(order, subsystemConfig);
     }
 
+    public String getTns() {
+        return tns;
+    }
+
+    public void setTns(String tns) {
+        this.tns = tns;
+    }
 }
