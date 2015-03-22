@@ -1,4 +1,5 @@
 <config name= "CFG_TEST">
+		<tns></tns>
 		<destination_directory>d:/#test_install/cfg1</destination_directory>
 		<!--		<prepare_directory>Config/#PREPARE</prepare_directory> -->
 		<subsystem type="SCR_CMS">
